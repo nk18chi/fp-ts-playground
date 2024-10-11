@@ -1,6 +1,6 @@
 import { test, describe, vi, expect, beforeEach } from 'vitest';
 import { Types } from 'mongoose';
-import User from '../models/User.schema';
+import User from '../repositories/user/User.schema';
 import userDataLoader from './User.dataLoader';
 
 const mockUsers = [

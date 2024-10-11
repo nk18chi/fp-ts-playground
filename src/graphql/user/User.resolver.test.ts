@@ -4,11 +4,11 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { applyMiddleware } from 'graphql-middleware';
 import { Types } from 'mongoose';
 import { rateLimitDirective } from 'graphql-rate-limit-directive';
-import Context from '../interface/Context.interface';
+import Context from '../../interfaces/Context.interface';
 import typeDefs from '../schemas';
-import resolvers from '.';
-import User from '../../models/User.schema';
-import IUser from '../../models/User.type';
+import resolvers from '../resolvers';
+import User from '../../repositories/user/User.schema';
+import IUser from '../../interfaces/User.interface';
 import userDataLoader from '../../dataloader/User.dataLoader';
 import {
   GQL_QUERY_GET_USERS,

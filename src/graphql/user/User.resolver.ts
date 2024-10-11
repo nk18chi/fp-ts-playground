@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
-import User from '../../models/User.schema';
+import User from '../../repositories/user/User.schema';
 import { Resolvers } from '../types';
-import IUser from '../../models/User.type';
+import IUser from '../../interfaces/User.interface';
 
 const userResolver: Resolvers = {
   Query: {

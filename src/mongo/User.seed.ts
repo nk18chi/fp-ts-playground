@@ -1,5 +1,5 @@
 import logger from '../config/logger';
-import User from '../models/User.schema';
+import User from '../repositories/user/User.schema';
 
 const seedData = async () => {
   const count = await User.countDocuments();

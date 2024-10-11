@@ -3,7 +3,7 @@ import request from 'supertest';
 import runServer from './server';
 import { GQL_QUERY_GET_USERS } from './graphql/gql/User.gql';
 import logger from './config/logger';
-import User from './models/User.schema';
+import User from './repositories/user/User.schema';
 
 vi.mock('./config/logger');
 vi.mock('./mongo/connect');

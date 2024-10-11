@@ -19,9 +19,9 @@ import typeDefs from './graphql/schemas';
 import resolvers from './graphql/resolvers';
 import 'dotenv/config';
 import userDataLoader from './dataloader/User.dataLoader';
-import Context from './graphql/interface/Context.interface';
+import Context from './interfaces/Context.interface';
 import permissions from './graphql/authorizations/permissions';
-import IAuthorizedUser from './graphql/interface/AuthorizedUser.interface';
+import IAuthorizedUser from './interfaces/AuthorizedUser.interface';
 
 const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } = rateLimitDirective();
 
