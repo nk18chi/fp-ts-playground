@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import * as ReadonlyArray from 'fp-ts/ReadonlyArray';
 import { pipe } from 'fp-ts/function';
-import { Either, right, left, chain, fold } from 'fp-ts/Either';
+import { chain, fold } from 'fp-ts/Either';
 import { Email } from '../../objects/Email.object';
+import { Email as EmailFpTs } from '../../objects/Email.object.fp-ts';
 import { Resolvers } from '../types';
 
 const fpResolver: Resolvers = {
@@ -11,14 +12,18 @@ const fpResolver: Resolvers = {
       const arr = ReadonlyArray.makeBy(5, (i) => i);
       console.log(arr);
 
-      const validateEmail = (email: string): Either<Error, string> => {
-        const hasAtSign = email.includes('@');
-        return hasAtSign ? right(email) : left(new Error('Invalid email'));
-      };
+      pipe(
+        EmailFpTs('aaa@example.com'),
+        chain(() => EmailFpTs('bbb@example.com')),
+        fold(
+          (error) => console.error(error),
+          (email) => console.log(email),
+        ),
+      );
 
       pipe(
-        validateEmail('aaa@example.com'),
-        chain(() => validateEmail('b')),
+        EmailFpTs('aaa@example.com'),
+        chain(() => EmailFpTs('b')),
         fold(
           (error) => console.error(error),
           (email) => console.log(email),

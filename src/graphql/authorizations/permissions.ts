@@ -9,6 +9,8 @@ const permissions = shield(
       getUsers: allow,
       optimizedGetUsers: allow,
       userToken: allow,
+      fpts: allow,
+      neverthrow: allow,
     },
   },
   {
