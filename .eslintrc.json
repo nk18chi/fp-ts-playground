@@ -2,6 +2,12 @@
   "root": true,
   "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": ["neverthrow"],
   "settings": {
     "import/resolver": {
       "typescript": {}
@@ -9,6 +15,7 @@
   },
   "ignorePatterns": ["dist/", "node_modules/", "coverage/"],
   "rules": {
+    "neverthrow/must-use-result": "error",
     "no-underscore-dangle": "off",
     "max-len": ["error", { "code": 120 }],
     "object-curly-newline": "off",

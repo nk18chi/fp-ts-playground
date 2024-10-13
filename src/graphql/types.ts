@@ -41,7 +41,9 @@ export type PageInfo = {
 export type Query = {
   __typename?: 'Query';
   authorizedGetUsers?: Maybe<Array<Maybe<User>>>;
+  fpts?: Maybe<Scalars['Boolean']['output']>;
   getUsers?: Maybe<Array<Maybe<User>>>;
+  neverthrow?: Maybe<Scalars['Boolean']['output']>;
   optimizedGetUsers?: Maybe<Array<Maybe<OptimizedUser>>>;
   userToken?: Maybe<Scalars['String']['output']>;
   users?: Maybe<UserConnection>;
@@ -71,6 +73,11 @@ export type UserEdge = {
   cursor?: Maybe<Scalars['String']['output']>;
   node?: Maybe<User>;
 };
+
+export enum UserStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+}
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -162,6 +169,7 @@ export type ResolversTypes = {
     Omit<UserConnection, 'edges'> & { edges?: Maybe<Array<Maybe<ResolversTypes['UserEdge']>>> }
   >;
   UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node?: Maybe<ResolversTypes['User']> }>;
+  UserStatus: UserStatus;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -231,7 +239,9 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   authorizedGetUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  fpts?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   getUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  neverthrow?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   optimizedGetUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['OptimizedUser']>>>, ParentType, ContextType>;
   userToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   users?: Resolver<
