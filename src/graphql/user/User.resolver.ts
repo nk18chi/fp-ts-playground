@@ -1,8 +1,11 @@
 import { Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
+import { ok } from 'neverthrow';
 import User from '../../repositories/user/User.schema';
 import { Resolvers } from '../types';
-import IUser from '../../interfaces/User.interface';
+import IUser, { InvalidatedUser } from '../../entities/User.entity';
+import { createUserWorkflow } from '../../workflows/createUser.workflows';
+import { saveCreatedUser } from '../../repositories/user/User.repository';
 
 const userResolver: Resolvers = {
   Query: {
@@ -39,6 +42,28 @@ const userResolver: Resolvers = {
       return jwt.sign({ _id: new Types.ObjectId() }, privateKey);
     },
   },
+
+  Mutation: {
+    createUser: (_, { input }) => {
+      const workflow = createUserWorkflow;
+
+      const invalidatedUser: InvalidatedUser = {
+        kind: 'InvalidatedUser',
+        name: input.name,
+        email: input.email,
+      };
+
+      const result = ok(invalidatedUser).andThen(workflow).asyncAndThen(saveCreatedUser);
+
+      return result.match(
+        (user) => user,
+        (error) => {
+          throw error;
+        },
+      );
+    },
+  },
+
   User: {
     followers: async (user) => User.find({ _id: { $in: user.followers } }).lean(),
     following: async (user) => User.find({ _id: { $in: user.following } }).lean(),

@@ -8,7 +8,6 @@ import Context from '../../interfaces/Context.interface';
 import typeDefs from '../schemas';
 import resolvers from '../resolvers';
 import User from '../../repositories/user/User.schema';
-import IUser from '../../interfaces/User.interface';
 import userDataLoader from '../../dataloader/User.dataLoader';
 import {
   GQL_QUERY_GET_USERS,
@@ -19,6 +18,7 @@ import {
 } from '../gql/User.gql';
 import permissions from '../authorizations/permissions';
 import { UserConnection } from '../types';
+import IUser from '../../entities/User.entity';
 
 const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } = rateLimitDirective();
 

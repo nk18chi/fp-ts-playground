@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { IUser } from '../interfaces/User.interface';
+import { IUser } from '../entities/User.entity';
 import { Context } from '../interfaces/Context.interface';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -23,6 +23,20 @@ export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC',
 }
+
+export type InvalidatedUserInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createUser?: Maybe<User>;
+};
+
+export type MutationCreateUserArgs = {
+  input: InvalidatedUserInput;
+};
 
 export type OptimizedUser = {
   __typename?: 'OptimizedUser';
@@ -155,6 +169,8 @@ export type ResolversTypes = {
   CacheControlScope: CacheControlScope;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  InvalidatedUserInput: InvalidatedUserInput;
+  Mutation: ResolverTypeWrapper<{}>;
   OptimizedUser: ResolverTypeWrapper<
     Omit<OptimizedUser, 'followers' | 'following'> & {
       followers?: Maybe<Array<Maybe<ResolversTypes['User']>>>;
@@ -177,6 +193,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  InvalidatedUserInput: InvalidatedUserInput;
+  Mutation: {};
   OptimizedUser: Omit<OptimizedUser, 'followers' | 'following'> & {
     followers?: Maybe<Array<Maybe<ResolversParentTypes['User']>>>;
     following?: Maybe<Array<Maybe<ResolversParentTypes['User']>>>;
@@ -213,6 +231,18 @@ export type RateLimitDirectiveResolver<
   ContextType = Context,
   Args = RateLimitDirectiveArgs,
 > = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type MutationResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  createUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateUserArgs, 'input'>
+  >;
+};
 
 export type OptimizedUserResolvers<
   ContextType = Context,
@@ -282,6 +312,7 @@ export type UserEdgeResolvers<
 };
 
 export type Resolvers<ContextType = Context> = {
+  Mutation?: MutationResolvers<ContextType>;
   OptimizedUser?: OptimizedUserResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

@@ -35,6 +35,21 @@ type Query {
   authorizedGetUsers: [User]
   userToken: String @cacheControl(maxAge: 0) @rateLimit(limit: 3, duration: 5)
 }
+
+type Mutation {
+  createUser(input: InvalidatedUserInput!): User
+}
+
+input InvalidatedUserInput {
+  name: String!
+  email: String!
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
 `;
 
 export default userTypeDef;

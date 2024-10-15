@@ -10,6 +10,6 @@ generates:
       - typescript
       - typescript-resolvers
     config:
-      contextType: ./interface/Context.interface#Context
+      contextType: ../interfaces/Context.interface#Context
       mappers:
-        User: ../models/User.type#IUser
+        User: ../entities/User.entity
