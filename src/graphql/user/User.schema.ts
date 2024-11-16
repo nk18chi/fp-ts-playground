@@ -37,10 +37,16 @@ type Query {
 }
 
 type Mutation {
-  createUser(input: InvalidatedUserInput!): User
+  createUser(input: InvalidatedCreateUserInput!): User!
+  updateUser(userId: String!, input: InvalidatedUpdateUserInput!): User!
 }
 
-input InvalidatedUserInput {
+input InvalidatedCreateUserInput {
+  name: String!
+  email: String!
+}
+
+input InvalidatedUpdateUserInput {
   name: String!
   email: String!
 }

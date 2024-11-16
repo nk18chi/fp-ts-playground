@@ -12,4 +12,4 @@ generates:
     config:
       contextType: ../interfaces/Context.interface#Context
       mappers:
-        User: ../entities/User.entity
+        User: ../entities/User.entity#IUser

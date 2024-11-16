@@ -40,4 +40,16 @@ export interface CreatedUser {
   status: UserStatus.Active;
 }
 
+export interface InvalidatedUserCommand {
+  invalidatedUser: InvalidatedUser;
+  user: User;
+}
+
+export interface ValidatedUserCommand {
+  validatedUser: ValidatedUser;
+  user: User;
+}
+
+export type UpdatedUser = Omit<User, 'kind'> & { kind: 'UpdatedUser' };
+
 export default IUser;

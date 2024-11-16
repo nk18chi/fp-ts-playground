@@ -24,18 +24,29 @@ export enum CacheControlScope {
   Public = 'PUBLIC',
 }
 
-export type InvalidatedUserInput = {
+export type InvalidatedCreateUserInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type InvalidatedUpdateUserInput = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createUser?: Maybe<User>;
+  createUser: User;
+  updateUser: User;
 };
 
 export type MutationCreateUserArgs = {
-  input: InvalidatedUserInput;
+  input: InvalidatedCreateUserInput;
+};
+
+export type MutationUpdateUserArgs = {
+  input: InvalidatedUpdateUserInput;
+  userId: Scalars['String']['input'];
 };
 
 export type OptimizedUser = {
@@ -169,7 +180,8 @@ export type ResolversTypes = {
   CacheControlScope: CacheControlScope;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  InvalidatedUserInput: InvalidatedUserInput;
+  InvalidatedCreateUserInput: InvalidatedCreateUserInput;
+  InvalidatedUpdateUserInput: InvalidatedUpdateUserInput;
   Mutation: ResolverTypeWrapper<{}>;
   OptimizedUser: ResolverTypeWrapper<
     Omit<OptimizedUser, 'followers' | 'following'> & {
@@ -193,7 +205,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
-  InvalidatedUserInput: InvalidatedUserInput;
+  InvalidatedCreateUserInput: InvalidatedCreateUserInput;
+  InvalidatedUpdateUserInput: InvalidatedUpdateUserInput;
   Mutation: {};
   OptimizedUser: Omit<OptimizedUser, 'followers' | 'following'> & {
     followers?: Maybe<Array<Maybe<ResolversParentTypes['User']>>>;
@@ -237,10 +250,16 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   createUser?: Resolver<
-    Maybe<ResolversTypes['User']>,
+    ResolversTypes['User'],
     ParentType,
     ContextType,
     RequireFields<MutationCreateUserArgs, 'input'>
+  >;
+  updateUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserArgs, 'input' | 'userId'>
   >;
 };
 

@@ -3,9 +3,11 @@ import jwt from 'jsonwebtoken';
 import { ok } from 'neverthrow';
 import User from '../../repositories/user/User.schema';
 import { Resolvers } from '../types';
-import IUser, { InvalidatedUser } from '../../entities/User.entity';
+import IUser, { InvalidatedUser, InvalidatedUserCommand } from '../../entities/User.entity';
 import { createUserWorkflow } from '../../workflows/createUser.workflows';
-import { saveCreatedUser } from '../../repositories/user/User.repository';
+import { getUserById, saveCreatedUser, updateUser } from '../../repositories/user/User.repository';
+import { updateUserWorkflow } from '../../workflows/updateUser.workflows';
+import { MongoId } from '../../objects/MongoId.object';
 
 const userResolver: Resolvers = {
   Query: {
@@ -54,6 +56,38 @@ const userResolver: Resolvers = {
       };
 
       const result = ok(invalidatedUser).andThen(workflow).asyncAndThen(saveCreatedUser);
+
+      return result.match(
+        (user) => user,
+        (error) => {
+          throw error;
+        },
+      );
+    },
+
+    updateUser: async (_, { userId, input }) => {
+      const workflow = updateUserWorkflow;
+
+      const preprocess = await MongoId(userId)
+        .asyncAndThen(getUserById)
+        .match(
+          (user) => {
+            const invalidatedUserCommand: InvalidatedUserCommand = {
+              invalidatedUser: {
+                kind: 'InvalidatedUser',
+                name: input.name,
+                email: input.email,
+              },
+              user,
+            };
+            return ok(invalidatedUserCommand);
+          },
+          (error) => {
+            throw error;
+          },
+        );
+
+      const result = preprocess.andThen(workflow).asyncAndThen(updateUser);
 
       return result.match(
         (user) => user,
