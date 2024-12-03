@@ -1,15 +1,11 @@
 import { ok, Result } from 'neverthrow';
-import {
-  InvalidatedUserCommand as InvalidatedUserCommandEntity,
-  ValidatedUserCommand as ValidatedUserCommandEntity,
-  UpdatedUser as UpdatedUserEntity,
-} from '../entities/User.entity';
-import { validateUser } from './createUser.workflows';
+import { InvalidatedUserCommand, ValidatedUserCommand, UpdatedUser } from '../entities/User.entity';
+import { validatedCreateUser } from './createUser.workflows';
 
-type ValidatedUserCommand = (command: InvalidatedUserCommandEntity) => Result<ValidatedUserCommandEntity, Error>;
+type ValidatedUserCommandResult = (command: InvalidatedUserCommand) => Result<ValidatedUserCommand, Error>;
 
-const validateUserCommand: ValidatedUserCommand = (command) => {
-  const validatedUser = validateUser(command.invalidatedUser);
+const validatedUserCommand: ValidatedUserCommandResult = (command) => {
+  const validatedUser = validatedCreateUser(command.invalidatedUser);
   const values = Result.combine([validatedUser]);
   return values.map(([validatedUserResult]) => ({
     validatedUser: validatedUserResult,
@@ -17,10 +13,10 @@ const validateUserCommand: ValidatedUserCommand = (command) => {
   }));
 };
 
-type UpdatedUserCommand = (command: ValidatedUserCommandEntity) => Result<UpdatedUserEntity, Error>;
+type UpdatedUserCommandResult = (command: ValidatedUserCommand) => Result<UpdatedUser, Error>;
 
-const updateUserCommand: UpdatedUserCommand = (command) => {
-  const user: UpdatedUserEntity = {
+const updatedUserCommand: UpdatedUserCommandResult = (command) => {
+  const user: UpdatedUser = {
     ...command.user,
     ...command.validatedUser,
     kind: 'UpdatedUser',
@@ -29,6 +25,6 @@ const updateUserCommand: UpdatedUserCommand = (command) => {
 };
 
 // workflow: invalidatedUserCommand => validatedUserCommand => updatedUser
-type UpdateUserWorkflow = (command: InvalidatedUserCommandEntity) => Result<UpdatedUserEntity, Error>;
+type UpdateUserWorkflow = (command: InvalidatedUserCommand) => Result<UpdatedUser, Error>;
 export const updateUserWorkflow: UpdateUserWorkflow = (command) =>
-  ok(command).andThen(validateUserCommand).andThen(updateUserCommand);
+  ok(command).andThen(validatedUserCommand).andThen(updatedUserCommand);

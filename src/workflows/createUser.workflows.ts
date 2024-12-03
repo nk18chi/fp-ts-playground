@@ -5,15 +5,15 @@ import { UserStatus } from '../graphql/types';
 
 type ValidatedUser = (model: InvalidatedUser) => Result<ValidatedUserEntity, Error>;
 
-export const validateUser: ValidatedUser = (model) =>
+export const validatedCreateUser: ValidatedUser = (model) =>
   ok({
     ...model,
     kind: 'ValidatedUser',
   });
 
-type CreateUser = (model: ValidatedUserEntity) => Result<CreatedUser, Error>;
+type CreatedUserResult = (model: ValidatedUserEntity) => Result<CreatedUser, Error>;
 
-export const createUser: CreateUser = (model) =>
+export const createdUser: CreatedUserResult = (model) =>
   ok({
     ...model,
     kind: 'CreatedUser',
@@ -23,4 +23,5 @@ export const createUser: CreateUser = (model) =>
 
 // workflow: invalidatedUser => validatedUser => createdUser
 type CreateUserWorkflow = (model: InvalidatedUser) => Result<CreatedUser, Error>;
-export const createUserWorkflow: CreateUserWorkflow = (model) => ok(model).andThen(validateUser).andThen(createUser);
+export const createUserWorkflow: CreateUserWorkflow = (model) =>
+  ok(model).andThen(validatedCreateUser).andThen(createdUser);
